@@ -4,6 +4,7 @@ import math
 from qgis.core import QGis, QgsVectorLayer, QgsGeometry
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QIcon, QAction
+from PyQt4.QtCore import *
 import resources_rc
 import os.path
 from qgis.gui import QgsMessageBar
@@ -16,69 +17,32 @@ class Suavizacao:
         
         # Save reference to the QGIS interface
         self.iface = iface
-        # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
-        
-        # Declare instance attributes
-        self.actions = []
-        self.menu = u'&FechaLinha'
-        # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'FechaLinha')
-        self.toolbar.setObjectName(u'FechaLinha')
-
-    def add_action(
-        self,
-        icon_path,
-        text,
-        callback,
-        enabled_flag=True,
-        add_to_menu=True,
-        add_to_toolbar=True,
-        status_tip=None,
-        whats_this=None,
-        parent=None):
-        
-
-        icon = QIcon(icon_path)
-        action = QAction(icon, text, parent)
-        action.triggered.connect(callback)
-        action.setEnabled(enabled_flag)
-
-        if status_tip is not None:
-            action.setStatusTip(status_tip)
-
-        if whats_this is not None:
-            action.setWhatsThis(whats_this)
-
-        if add_to_toolbar:
-            self.toolbar.addAction(action)
-
-        if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
-
-        self.actions.append(action)
-
-        return action
 
     def initGui(self):
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
-
+         
+        # cria uma ação que iniciará a configuração do plugin 
+        pai = self.iface.mainWindow()
         icon_path = ':/plugins/Suavizacao/b.png'
-        self.add_action(
-            icon_path,
-            text=u'FechaLinha',
-            callback=self.run,
-            parent=self.iface.mainWindow())
+        
+        
+        self.action = QAction (QIcon (icon_path),'Fechar linha', pai)
+        self.action.setObjectName ('Fechar linha')
+        self.action.setStatusTip('status_tip')
+        self.action.setWhatsThis('whats_this')
+        QObject.connect (self.action, SIGNAL ("triggered ()"), self.run)
+
+        # Adicionar o botão da barra de ferramentas e item de menu 
+        self.iface.addToolBarIcon (self.action) 
+        self.iface.addPluginToMenu ("&Fecha_linha", self.action)
+
+
 
     def unload(self):
-        """Removes the plugin menu item and icon from QGIS GUI."""
-        for action in self.actions:
-            self.iface.removePluginMenu(u'&FechaLinha', action)
-            self.iface.removeToolBarIcon(action)
+        
+        self.iface.removePluginMenu(u'&Fecha_Linha', self.action)
+        self.iface.removeToolBarIcon(self.action)
         # remove the toolbar
-        del self.toolbar
+        
 
 
     def run(self):
