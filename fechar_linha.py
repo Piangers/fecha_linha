@@ -1,51 +1,38 @@
 # -*- coding: utf-8 -*-
 
 import math
-from qgis.core import QGis, QgsVectorLayer, QgsGeometry
-from PyQt4 import QtCore, QtGui
+from qgis.core import QGis
 from PyQt4.QtGui import QIcon, QAction
-from PyQt4.QtCore import *
+from PyQt4.QtCore import QObject, SIGNAL
 import resources_rc
-import os.path
 from qgis.gui import QgsMessageBar
 
-
-class Suavizacao:
-    """QGIS Plugin Implementation."""
+class FecharLinha:
 
     def __init__(self, iface):
-        
+       
         # Save reference to the QGIS interface
         self.iface = iface
-
+        
     def initGui(self):
          
         # cria uma ação que iniciará a configuração do plugin 
         pai = self.iface.mainWindow()
         icon_path = ':/plugins/Suavizacao/b.png'
-        
-        
         self.action = QAction (QIcon (icon_path),'Fechar linha', pai)
-        self.action.setObjectName ('Fechar linha')
-        self.action.setStatusTip('status_tip')
-        self.action.setWhatsThis('whats_this')
-        QObject.connect (self.action, SIGNAL ("triggered ()"), self.run)
+        self.action.setObjectName ('fecharlinha')
+        self.action.setStatusTip('Selecione uma linha que deseja fechar')
+        self.action.setWhatsThis('O plugin fecha linhas')
+        QObject.connect (self.action, SIGNAL ("triggered()"), self.fecharLinha)
 
         # Adicionar o botão da barra de ferramentas e item de menu 
         self.iface.addToolBarIcon (self.action) 
-        self.iface.addPluginToMenu ("&Fecha_linha", self.action)
-
-
-
+      
     def unload(self):
-        
-        self.iface.removePluginMenu(u'&Fecha_Linha', self.action)
-        self.iface.removeToolBarIcon(self.action)
-        # remove the toolbar
-        
 
-
-    def run(self):
+            self.iface.removeToolBarIcon(self.action)
+            
+    def fecharLinha(self):
         if(self.testLayerAtivo()):
             if(self.testMetro() and self.testTipoGeometria() and self.testGeometriaSelecionada()):
                 
@@ -61,7 +48,7 @@ class Suavizacao:
                     
                     distancia = (math.sqrt ((x1 - x2)**2 + (y1 - y2)**2))
                     if(not distancia <= 50):
-                        self.iface.messageBar().pushMessage(u'Distãncia entre vertice final e inicial deve ser menor que a tolerãncia de 50 metros.', level=QgsMessageBar.WARNING, duration=5)   
+                        self.iface.messageBar().pushMessage(u'Distância entre vertice final e inicial deve ser menor que a tolerância de 50 metros.', level=QgsMessageBar.WARNING, duration=5)   
                     else:
                         indice_ultimo_vertice = len(vertex_list)-1
                         last_vertex = geom.vertexAt(indice_ultimo_vertice)

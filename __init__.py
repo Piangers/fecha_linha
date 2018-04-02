@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from suavizacao import Suavizacao
+from fechar_linha import FecharLinha
 
 def classFactory(iface):
-    return Suavizacao(iface)
+    return FecharLinha(iface)
