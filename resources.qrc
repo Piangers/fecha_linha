@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/Suavizacao" >
-        <file>b.png</file>
+    <qresource prefix="/plugins/fecha_Linha" >
+        <file>icon.png</file>
     </qresource>
 </RCC>

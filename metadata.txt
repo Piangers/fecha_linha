@@ -8,7 +8,8 @@
 
 [general]
 name=Fechar linhas
-qgisMinimumVersion=2.0
+qgisMinimumVersion=3.00
+qgisMaximunVersion=3.99
 description=ferramenta
 version=0.1
 author=piangers
@@ -30,7 +31,7 @@ tags=python
 
 homepage=http://homepage
 category=Plugins
-icon=b.png
+icon=icon.png
 # experimental flag
 experimental=True
 
